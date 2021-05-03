@@ -3,7 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "server": "nodemon server/index.js",
+    "client": "parcel client/index.html",
+    "dev": "concurrently --kill-others \"npm run server\" \"npm run client\""
+  },
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0-beta.2",
+    "concurrently": "^6.0.2",
+    "nodemon": "^2.0.7",
+    "parcel": "^2.0.0-beta.2",
     "sass": "^1.26.7"
   },
   "dependencies": {
