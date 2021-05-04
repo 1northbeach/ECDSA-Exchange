@@ -32,3 +32,4 @@ $ npm run dev
 4. use of vrs signatures instead of sending private key
 5. transaction history
 6. receive page
+7. testing would be nice and have helped a lot
