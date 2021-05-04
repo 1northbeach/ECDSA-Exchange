@@ -10,11 +10,11 @@ export default function Home() {
         receive magic internet money.
       </p>
       <p className="lead">
+        <Link href="/wallet">
+          <a className="btn btn-lg btn-secondary mx-2 my-2">Wallet</a>
+        </Link>
         <Link href="/send">
           <a className="btn btn-lg btn-secondary mx-2 my-2">Send</a>
-        </Link>
-        <Link href="/receive">
-          <a className="btn btn-lg btn-secondary mx-2 my-2">Receive</a>
         </Link>
       </p>
     </Layout>
