@@ -16,3 +16,17 @@ $ cd client
 $ npm i
 $ npm run dev
 ```
+
+### basic workflow
+
+1. create a few wallets
+2. note the private key of one wallet from the server log or front end
+3. grab the address either from the server log or the front end
+4. go to /send and enter the appropriate inputs to start a transaction
+
+### todo
+
+1. some validation
+2. balance checking
+3. persistence
+4. use of vrs signatures instead of sending private key
