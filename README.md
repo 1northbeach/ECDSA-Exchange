@@ -28,5 +28,7 @@ $ npm run dev
 
 1. some validation
 2. balance checking
-3. persistence
+3. wallet persistence
 4. use of vrs signatures instead of sending private key
+5. transaction history
+6. receive page
