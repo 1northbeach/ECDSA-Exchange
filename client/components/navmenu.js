@@ -24,7 +24,8 @@ export default function NavMenu() {
         <nav className="nav nav-masthead justify-content-center">
           {ActiveLink("/wallet", "Wallet")}
           {ActiveLink("/send", "Send")}
-          {ActiveLink("/receive", "Receive")}
+          {ActiveLink("/mine", "Mine")}
+          {ActiveLink("/explorer", "Explorer")}
           {ActiveLink("/about", "About")}
         </nav>
       </div>

@@ -1,4 +1,4 @@
-Submission for Week 1 Project in Chainshot Ethereum Developer Bootcamp by 1northbeach - Juan
+Submission for Week 2 Project in Chainshot Ethereum Developer Bootcamp by 1northbeach - Juan
 
 #
 
@@ -23,6 +23,7 @@ $ npm run dev
 2. note the private key of one wallet from the server log or front end
 3. grab the address either from the server log or the front end
 4. go to /send and enter the appropriate inputs to start a transaction
+5. go to /mine and press the mine button until you receive a hash that is higher than the current difficulty and receive some ETH in return
 
 ### todo
 
