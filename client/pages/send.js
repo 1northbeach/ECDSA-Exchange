@@ -91,7 +91,7 @@ export default function Send() {
       </Head>
       <h1>Send</h1>
       {transactionSent || updateTxnStatus(transactionStatus)}
-      <p>Available to send: {availableBalance || 0} ETH</p>
+      <p className="lead">Available to send: {availableBalance || 0} ETH</p>
       <form>
         <div className="input-group mb-3">
           <div className="input-group-prepend">

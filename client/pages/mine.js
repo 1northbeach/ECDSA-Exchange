@@ -38,16 +38,58 @@ export default function Mine() {
   };
 
   const startMining = async () => {
-    if (!isMining) {
-      socket.emit("startMining");
-      const response = await fetch("http://localhost:3000/api/mine");
-
+    if (!isMining && walletAddress.length) {
+      // socket.emit("startMining");
+      const response = await fetch("http://localhost:3000/api/mine", {
+        method: "POST",
+        headers: {
+          "Content-Type": "applcation/json",
+        },
+        body: JSON.stringify({
+          walletAddress: walletAddress,
+          ACTION_TYPE: "startMining",
+        }),
+      });
       setIsMining(true);
     } else {
-      socket.emit("stopMining");
+      // socket.emit("stopMining");
+      const response = await fetch("http://localhost:3000/api/mine", {
+        method: "POST",
+        headers: {
+          "Content-Type": "applcation/json",
+        },
+        body: JSON.stringify({
+          walletAddress: walletAddress,
+          ACTION_TYPE: "stopMining",
+        }),
+      });
       setIsMining(false);
     }
   };
+
+  useEffect(() => {
+    if (!walletAddress.length) return;
+    const recoverWallet = async (value) => {
+      try {
+        const res = await fetch("http://localhost:3000/api/wallet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ACTION_TYPE: "GET_BALANCE",
+            publicKey: value,
+          }),
+        });
+        let wallet = await res.json();
+        console.log("wallet1", wallet);
+        if (wallet) {
+          setWalletBalance(wallet);
+        }
+      } catch (error) {
+        console.error("error!", error);
+      }
+    };
+    recoverWallet(walletAddress);
+  }, [walletAddress, miningOutput]);
 
   const handleChange = (input) => (event) => {
     const value = event.target.value;
@@ -66,56 +108,64 @@ export default function Mine() {
       <div className="container">
         <h1>Mine</h1>
 
-        <p>Current Difficulty: {currentDifficulty}</p>
-        <p>Wallet Balance: {hashAttempt || 0} ETH</p>
-        <p>
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text">Wallet</span>
-            </div>
-            <input
-              type="text"
-              className="form-control"
-              id="walletAddress"
-              aria-label="walletAddress"
-              placeholder="Miner's Address"
-              onChange={handleChange("walletAddress")}
-              value={walletAddress}
-            />
+        {/* <p className="lead">Current Difficulty: {currentDifficulty}</p> */}
+        <p className="lead">Wallet Balance: {walletBalance || 0} ETH</p>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Wallet</span>
           </div>
-        </p>
+          <input
+            type="text"
+            className="form-control"
+            id="walletAddress"
+            aria-label="walletAddress"
+            placeholder="Miner's Address"
+            onChange={handleChange("walletAddress")}
+            value={walletAddress}
+          />
+        </div>
         <p>
           <button
             className="btn btn-lg btn-secondary my-3"
             onClick={startMining}
           >
-            Start mining
+            {isMining ? "Stop" : "Start"} mining
           </button>
         </p>
       </div>
       <div className="container-fluid">
-        <p>
-          <table className="table table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Block #</th>
-                <th scope="col">Hash</th>
-                <th scope="col">Nonce</th>
-              </tr>
-            </thead>
-            <tbody>
-              {miningOutput.map((output) => {
-                return (
-                  <tr key={output.blockNumber}>
-                    <td>{output.blockNumber}</td>
-                    <td>{output.hash}</td>
-                    <td>{output.nonce}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </p>
+        <table className="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Block #</th>
+              <th scope="col">Hash</th>
+              <th scope="col">Nonce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {walletAddress
+              ? miningOutput
+                  .filter((mO) => mO.walletAddress == walletAddress)
+                  .map((output) => {
+                    return (
+                      <tr key={output.blockNumber}>
+                        <td>{output.blockNumber}</td>
+                        <td>{output.hash}</td>
+                        <td>{output.nonce}</td>
+                      </tr>
+                    );
+                  })
+              : miningOutput.map((output) => {
+                  return (
+                    <tr key={output.blockNumber}>
+                      <td>{output.blockNumber}</td>
+                      <td>{output.hash}</td>
+                      <td>{output.nonce}</td>
+                    </tr>
+                  );
+                })}
+          </tbody>
+        </table>
       </div>
     </Layout>
   );

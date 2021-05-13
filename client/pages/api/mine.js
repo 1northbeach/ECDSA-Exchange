@@ -3,9 +3,17 @@ import request from "superagent";
 
 export default async function handler(req, res) {
   console.log("GET /api/mine");
-  const requestBody = jayson.Utils.request("startMining", [], undefined, {
-    version: 2,
-  });
+  const { walletAddress, ACTION_TYPE } = JSON.parse(req.body);
+  console.log("walletAddress", walletAddress);
+  console.log("req.body.ACTION_TYPE", req.body.ACTION_TYPE);
+  const requestBody = jayson.Utils.request(
+    ACTION_TYPE,
+    [walletAddress],
+    undefined,
+    {
+      version: 2,
+    }
+  );
 
   request
     .post("http://localhost:3042")

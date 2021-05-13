@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 export default async function handler(req, res) {
-  console.log("=".repeat(100));
-  console.log("req.method", req.method);
+  // console.log("=".repeat(100));
+  // console.log("req.method", req.method);
   let wallet = null;
   let data = null;
   if (req.method === "POST") {
@@ -34,16 +34,21 @@ export default async function handler(req, res) {
         }
         break;
       case "GET_BALANCE":
-        let balance = await fetch("http://localhost:3042/wallets/getBalance", {
+        data = await fetch("http://localhost:3042/wallets/getBalance", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ walletAddress: req.body.address }),
+          body: JSON.stringify({ walletAddress: req.body.publicKey }),
         });
-        if (balance) {
-          console.log("POST /api/wallet, balance retrieved", balance);
-          res.status(200).json(balance);
+        let balance = await data.json();
+        // console.log(balance.balance);
+        if (balance.balance) {
+          // console.log("POST /api/wallet, balance retrieved", balance.balance);
+          res.status(200).json(balance.balance);
+        } else {
+          // console.log("POST /api/wallet, balance not found");
+          res.status(404).json();
         }
         break;
       default:

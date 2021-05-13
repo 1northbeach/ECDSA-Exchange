@@ -10,17 +10,20 @@ const socket = io("http://localhost:3042");
 let mining = false;
 const BLOCK_REWARD = 10;
 
+const miners = {};
 function startMining(walletAddress) {
-  mining = true;
+  miners[walletAddress] = true;
+  console.log("miners", miners);
   mine(walletAddress);
 }
 
-function stopMining() {
-  mining = false;
+function stopMining(walletAddress) {
+  miners[walletAddress] = false;
+  console.log("miners", miners);
 }
 
 function mine(walletAddress) {
-  if (!mining) return;
+  if (!miners[walletAddress]) return;
 
   const block = new Block();
 
@@ -46,7 +49,7 @@ function mine(walletAddress) {
       block.nonce
     }. 10ETH rewarded to ${walletAddress}`
   );
-  setTimeout(mine, 500);
+  setTimeout(mine, 5000, walletAddress);
 }
 
 module.exports = {

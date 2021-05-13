@@ -22,13 +22,13 @@ app.use(
 );
 
 const server = new jayson.server({
-  startMining: function (_, callback) {
+  startMining: function ([address], callback) {
     callback(null, "Started Mining!");
-    startMining();
+    startMining(address);
   },
-  stopMining: function (_, callback) {
+  stopMining: function ([address], callback) {
     callback(null, "Stopped Mining!");
-    stopMining();
+    stopMining(address);
   },
   getBalance: function ([address], callback) {
     const ourUTXOs = utxos.filter((x) => {
@@ -57,6 +57,12 @@ app.post("/wallets/recover", (req, res) => {
   let wallet = db.wallets.filter((wallet) => wallet.privateKey == privateKey);
   console.log("wallet", wallet);
   res.send(wallet);
+});
+
+app.post("/wallets/getBalance", (req, res) => {
+  const { walletAddress } = req.body;
+  let wallet = db.wallets.filter((wallet) => wallet.public == walletAddress);
+  res.status(200).json({ balance: wallet[0].balance });
 });
 
 app.get("/wallets/:address", (req, res) => {
@@ -139,6 +145,10 @@ io.on("connection", (socket) => {
     }, interval);
   });
   socket.on("miningEvent", (miningEvent) => {
+    let wallet = db.wallets.filter(
+      (wallet) => wallet.public == miningEvent.walletAddress
+    )[0];
+    wallet.balance += 10;
     miningOutput.push(miningEvent);
   });
   console.log("a user connected");
