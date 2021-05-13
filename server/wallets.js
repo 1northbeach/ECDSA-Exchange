@@ -31,6 +31,7 @@ exports.sign = function (privateKey, publicKey, amount) {
 };
 
 exports.verify = function (publicKey, txnString, signature) {
+  console.log("publicKey", publicKey);
   const ec = new EC("secp256k1");
   const key = ec.keyFromPublic(publicKey, "hex");
   const txnHash = SHA256(txnString).toString();

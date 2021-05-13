@@ -15,7 +15,6 @@ export default function Send() {
     console.log("submit clicked");
     console.log("receipientAddress", recipientAddress);
     console.log("sendersPrivateKey", sendersPrivateKey);
-    console.log("senderAddress", senderAddress);
     console.log("amountToSend", amountToSend);
     if (amountToSend > availableBalance) {
       setTransactionStatus("Not enough balance!");
@@ -26,7 +25,6 @@ export default function Send() {
         method: "POST",
         body: JSON.stringify({
           sendersPrivateKey: sendersPrivateKey,
-          senderAddress: senderAddress,
           recipientAddress: recipientAddress,
           amountToSend: amountToSend,
         }),
@@ -56,6 +54,7 @@ export default function Send() {
     switch (input) {
       case "sendersPrivateKey":
         setSendersPrivateKey(value);
+        recoverWallet(value);
         break;
       case "recipientAddress":
         setRecipientAddress(value);
@@ -67,6 +66,24 @@ export default function Send() {
         break;
     }
   };
+  const recoverWallet = async (value) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/wallet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ACTION_TYPE: "RECOVER",
+          privateKey: value,
+        }),
+      });
+      let wallet = await res.json();
+      if (wallet[0]) {
+        setAvailableBalance(wallet[0].balance);
+      }
+    } catch (error) {
+      console.error("error!", error);
+    }
+  };
   return (
     <Layout>
       <Head>
@@ -74,7 +91,7 @@ export default function Send() {
       </Head>
       <h1>Send</h1>
       {transactionSent || updateTxnStatus(transactionStatus)}
-      <p>Available to send: {availableBalance} ETH</p>
+      <p>Available to send: {availableBalance || 0} ETH</p>
       <form>
         <div className="input-group mb-3">
           <div className="input-group-prepend">

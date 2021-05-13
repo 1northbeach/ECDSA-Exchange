@@ -49,12 +49,14 @@ app.post("/wallets/create", (req, res) => {
 });
 
 app.post("/wallets/recover", (req, res) => {
-  // TODO
   console.log("POST /wallets/recover");
-  let wallet = db.wallets.filter(
-    (wallet) => (wallet.address = req.body.address)
-  );
-  res.send({ wallet });
+  console.log("req.body", req.body);
+  const { privateKey } = req.body;
+  console.log("privateKey", privateKey);
+
+  let wallet = db.wallets.filter((wallet) => wallet.privateKey == privateKey);
+  console.log("wallet", wallet);
+  res.send(wallet);
 });
 
 app.get("/wallets/:address", (req, res) => {
@@ -67,15 +69,14 @@ app.get("/wallets/:address", (req, res) => {
 
 app.post("/send", (req, res) => {
   console.log("POST /send");
-  const { senderAddress, recipientAddress, amountToSend, sendersPrivateKey } =
-    req.body;
+  const { recipientAddress, amountToSend, sendersPrivateKey } = req.body;
   console.log(req.body);
   let amount = parseInt(amountToSend);
   let senderWallet = db.wallets.filter(
-    (wallet) => wallet.publicKey === senderAddress
+    (wallet) => wallet.privateKey === sendersPrivateKey
   )[0];
   let recipientWallet = db.wallets.filter(
-    (wallet) => wallet.publicKey === recipientAddress
+    (wallet) => wallet.public === recipientAddress
   )[0];
 
   if (senderWallet.balance < amountToSend) {
@@ -87,7 +88,9 @@ app.post("/send", (req, res) => {
   const sign = w.sign(sendersPrivateKey, recipientAddress, amountToSend);
   const txn = `SEND|${recipientAddress}|${amountToSend}`;
 
-  const verified = w.verify(senderWallet.publicKey, txn, sign.signature);
+  console.log("senderWallet", senderWallet);
+
+  const verified = w.verify(senderWallet.public, txn, sign.signature);
 
   if (verified) {
     console.log("VERIFIED, TXN PROCESSING!");

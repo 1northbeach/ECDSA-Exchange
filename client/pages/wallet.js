@@ -8,21 +8,26 @@ export default function Wallet() {
   const [privateKey, setPrivateKey] = useState(null);
   const [balance, setBalance] = useState(0);
   const [walletReady, setWalletReady] = useState(false);
+
   const recoverWallet = async (e) => {
     e.preventDefault();
     try {
+      console.log(privateKey);
       const res = await fetch("http://localhost:3000/api/wallet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ACTION_TYPE: "RECOVER",
           privateKey: privateKey,
-          publicAddress: publicAddress,
         }),
       });
-      setPrivateKey(res.privateKey);
-      setPublicAddress(res.publicAddress);
-      setBalance(res.balance);
+      let wallet = await res.json();
+      console.log(wallet);
+      if (wallet[0]) {
+        setPrivateKey(wallet[0].privateKey);
+        setPublicAddress(wallet[0].public);
+        setBalance(wallet[0].balance);
+      }
     } catch (error) {
       console.error("error!", error);
     }
@@ -75,48 +80,46 @@ export default function Wallet() {
         <button className="btn btn-secondary m-1" onClick={createWallet}>
           Create
         </button>
-        {/* <button className="btn btn-secondary m-1" onClick={recoverWallet}>
+        <button className="btn btn-secondary m-1" onClick={recoverWallet}>
           Recover
-        </button> */}
+        </button>
       </p>
-      <p className="lead">
-        <table className="table table-hover table-bordered table-dark">
-          <tbody>
-            <tr>
-              <td>
-                {" "}
-                <div className="input-group p-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">PVT</span>
-                  </div>
-                  <input
-                    className="form-control"
-                    type="text"
-                    value={privateKey}
-                    onChange={handleChange("privateKey")}
-                  />
+      <table className="table table-hover table-bordered table-dark">
+        <tbody>
+          <tr>
+            <td>
+              {" "}
+              <div className="input-group p-1">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">PVT</span>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                {" "}
-                <div className="input-group p-1">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">PUB</span>
-                  </div>
-                  <input
-                    className="form-control"
-                    type="text"
-                    value={publicAddress}
-                    onChange={handleChange("publicAddress")}
-                  />
+                <input
+                  className="form-control"
+                  type="text"
+                  value={privateKey}
+                  onChange={handleChange("privateKey")}
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {" "}
+              <div className="input-group p-1">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">PUB</span>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </p>
+                <input
+                  className="form-control"
+                  type="text"
+                  value={publicAddress}
+                  onChange={handleChange("publicAddress")}
+                />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </Layout>
   );
 }
