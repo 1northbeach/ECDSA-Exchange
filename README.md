@@ -40,3 +40,5 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 7. testing would be nice and have helped a lot
 8. move mining to client. server doing all the work currently.
 9. anyone with your wallet can stop you from mining, maybe use private key to toggle mining.
+10. balance is calculated by integer value associated with it. use UTXOs to calculate.
+11. currently mines blocks sequentially but not tested for double spends/mining.
