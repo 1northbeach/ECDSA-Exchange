@@ -2,7 +2,7 @@
 let currentWallet = {};
 export default async function handler(req, res) {
   console.log("=".repeat(100));
-  console.log(req.method);
+  console.log("req.method", req.method);
   let wallet = null;
   if (req.method === "POST") {
     switch (req.body.ACTION_TYPE) {
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         if (wallet) {
           console.log("POST /api/wallet, new wallet created", wallet);
           currentWallet = wallet;
-          res.status(200).json(currentWallet);
+          res.status(200).json(wallet);
         }
         break;
       case "RECOVER":

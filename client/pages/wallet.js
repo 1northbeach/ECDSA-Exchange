@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Wallet() {
   const [wallet, setWallet] = useState({});
-  const [publicX, setPublicX] = useState(null);
-  const [publicY, setPublicY] = useState(null);
-  const [address, setAddress] = useState(null);
+  const [publicAddress, setPublicAddress] = useState(null);
   const [privateKey, setPrivateKey] = useState(null);
   const [balance, setBalance] = useState(0);
   const [walletReady, setWalletReady] = useState(false);
@@ -19,15 +17,12 @@ export default function Wallet() {
         body: JSON.stringify({
           ACTION_TYPE: "RECOVER",
           privateKey: privateKey,
-          publicX: publicX,
-          publicY: publicY,
+          publicAddress: publicAddress,
         }),
       });
       setPrivateKey(res.privateKey);
-      setPublicX(res.publicX);
-      setPublicY(res.publicY);
+      setPublicAddress(res.publicAddress);
       setBalance(res.balance);
-      setAddress(res.address);
     } catch (error) {
       console.error("error!", error);
     }
@@ -51,10 +46,8 @@ export default function Wallet() {
 
   useEffect(() => {
     setPrivateKey(wallet.privateKey);
-    setPublicX(wallet.publicX);
-    setPublicY(wallet.publicY);
+    setPublicAddress(wallet.public);
     setBalance(wallet.balance);
-    setAddress(wallet.address);
   }, [wallet, walletReady]);
 
   const handleChange = (input) => (event) => {
@@ -63,11 +56,9 @@ export default function Wallet() {
       case "privateKey":
         setPrivateKey(value);
         break;
-      case "publicX":
-        setPublicX(value);
+      case "publicAddress":
+        setPublicAddress(value);
         break;
-      case "publicY":
-        setPublicY(value);
       default:
         break;
     }
@@ -79,10 +70,8 @@ export default function Wallet() {
         <title>1Ethereum - Wallet</title>
       </Head>
       <h1 className="cover-heading">Wallet</h1>
-
-      <p>Balance: {balance} ETH</p>
-      <p>Address: {address}</p>
-      <p>
+      <p className="lead">Balance: {balance || 0} ETH</p>
+      <p className="lead">
         <button className="btn btn-secondary m-1" onClick={createWallet}>
           Create
         </button>
@@ -90,58 +79,44 @@ export default function Wallet() {
           Recover
         </button> */}
       </p>
-      <table className="table table-hover table-bordered table-dark">
-        <tbody>
-          <tr>
-            <td>
-              {" "}
-              <div className="input-group p-1">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">PVT</span>
+      <p className="lead">
+        <table className="table table-hover table-bordered table-dark">
+          <tbody>
+            <tr>
+              <td>
+                {" "}
+                <div className="input-group p-1">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">PVT</span>
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={privateKey}
+                    onChange={handleChange("privateKey")}
+                  />
                 </div>
-                <input
-                  className="form-control"
-                  type="text"
-                  value={privateKey}
-                  onChange={handleChange("privateKey")}
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              {" "}
-              <div className="input-group p-1">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">X</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {" "}
+                <div className="input-group p-1">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">PUB</span>
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={publicAddress}
+                    onChange={handleChange("publicAddress")}
+                  />
                 </div>
-                <input
-                  className="form-control"
-                  type="text"
-                  value={publicX}
-                  onChange={handleChange("publicX")}
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              {" "}
-              <div className="input-group p-1">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">Y</span>
-                </div>
-                <input
-                  className="form-control"
-                  type="text"
-                  value={publicY}
-                  onChange={handleChange("publicY")}
-                />
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </p>
     </Layout>
   );
 }

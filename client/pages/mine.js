@@ -10,6 +10,8 @@ export default function Mine() {
   const [successfulMine, setSuccessfulMine] = useState(false);
   const [miningOutput, setMiningOutput] = useState([]);
   const [isMining, setIsMining] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+  const [walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
     setSocket(io("http://localhost:3042/"));
@@ -46,44 +48,75 @@ export default function Mine() {
       setIsMining(false);
     }
   };
+
+  const handleChange = (input) => (event) => {
+    const value = event.target.value;
+    switch (input) {
+      case "walletAddress":
+        setWalletAddress(value);
+      default:
+        break;
+    }
+  };
   return (
     <Layout>
       <Head>
         <title>1Ethereum - Mine</title>
       </Head>
-      <h1>Mine</h1>
-      <p>
-        <div className="container">Current Difficulty: {currentDifficulty}</div>
-        <div className="container">Last Hash attempt: {hashAttempt}</div>
-      </p>
-      <p>
-        <button className="btn btn-lg btn-secondary my-3" onClick={startMining}>
-          Start mining
-        </button>
-      </p>
+      <div className="container">
+        <h1>Mine</h1>
 
-      <p>
-        <table className="table table-dark">
-          <thead>
-            <tr>
-              <th scope="col">Block #</th>
-              <th scope="col">Hash</th>
-              <th scope="col">Nonce</th>
-            </tr>
-          </thead>
-          <tbody>
-            {miningOutput.map((output) => {
-              return (
-                <tr key={output.blockNumber}>
-                  <td>{output.blockNumber}</td>
-                  <td>{output.hash}</td>
-                  <td>{output.nonce}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </p>
+        <p>Current Difficulty: {currentDifficulty}</p>
+        <p>Wallet Balance: {hashAttempt || 0} ETH</p>
+        <p>
+          <div className="input-group mb-3">
+            <div className="input-group-prepend">
+              <span className="input-group-text">Wallet</span>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              id="walletAddress"
+              aria-label="walletAddress"
+              placeholder="Miner's Address"
+              onChange={handleChange("walletAddress")}
+              value={walletAddress}
+            />
+          </div>
+        </p>
+        <p>
+          <button
+            className="btn btn-lg btn-secondary my-3"
+            onClick={startMining}
+          >
+            Start mining
+          </button>
+        </p>
+      </div>
+      <div className="container-fluid">
+        <p>
+          <table className="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Block #</th>
+                <th scope="col">Hash</th>
+                <th scope="col">Nonce</th>
+              </tr>
+            </thead>
+            <tbody>
+              {miningOutput.map((output) => {
+                return (
+                  <tr key={output.blockNumber}>
+                    <td>{output.blockNumber}</td>
+                    <td>{output.hash}</td>
+                    <td>{output.nonce}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </p>
+      </div>
     </Layout>
   );
 }

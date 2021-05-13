@@ -39,46 +39,6 @@ const server = new jayson.server({
   },
 });
 
-app.use(jsonParser());
-app.use(function (req, res, next) {
-  const request = req.body;
-  // <- here we can check headers, modify the request, do logging, etc
-  server.call(request, function (err, response) {
-    if (err) {
-      // if err is an Error, err is NOT a json-rpc error
-      if (err instanceof Error) return next(err);
-      // <- deal with json-rpc errors here, typically caused by the user
-      res.status(400);
-      res.send(err);
-      return;
-    }
-    // <- here we can mutate the response, set response headers, etc
-    if (response) {
-      res.send(response);
-    } else {
-      // empty response (could be a notification)
-      res.status(204);
-      res.send("");
-    }
-  });
-});
-
-let miningOutput = [];
-io.on("connection", (socket) => {
-  socket.on("subscribeToMiningEvents", (interval) => {
-    setInterval(() => {
-      socket.emit(
-        "getMiningEvent",
-        miningOutput.slice(-10).sort((a, b) => b.blockNumber - a.blockNumber)
-      );
-    }, interval);
-  });
-  socket.on("miningEvent", (miningEvent) => {
-    miningOutput.push(miningEvent);
-  });
-  console.log("a user connected");
-});
-
 app.post("/wallets/create", (req, res) => {
   console.log("POST /wallets/create");
   let newWallet = w.createWallet();
@@ -112,10 +72,10 @@ app.post("/send", (req, res) => {
   console.log(req.body);
   let amount = parseInt(amountToSend);
   let senderWallet = db.wallets.filter(
-    (wallet) => wallet.address === senderAddress
+    (wallet) => wallet.publicKey === senderAddress
   )[0];
   let recipientWallet = db.wallets.filter(
-    (wallet) => wallet.address === recipientAddress
+    (wallet) => wallet.publicKey === recipientAddress
   )[0];
 
   if (senderWallet.balance < amountToSend) {
@@ -127,12 +87,7 @@ app.post("/send", (req, res) => {
   const sign = w.sign(sendersPrivateKey, recipientAddress, amountToSend);
   const txn = `SEND|${recipientAddress}|${amountToSend}`;
 
-  const verified = w.verify(
-    senderWallet.publicX,
-    senderWallet.publicY,
-    txn,
-    sign.signature
-  );
+  const verified = w.verify(senderWallet.publicKey, txn, sign.signature);
 
   if (verified) {
     console.log("VERIFIED, TXN PROCESSING!");
@@ -144,6 +99,46 @@ app.post("/send", (req, res) => {
     console.error("UNVERIFIED, TXN FAILED");
     res.status(401).json({});
   }
+});
+
+app.use(jsonParser());
+app.use(function (req, res, next) {
+  const request = req.body;
+  // <- here we can check headers, modify the request, do logging, etc
+  server.call(request, function (err, response) {
+    if (err) {
+      // // if err is an Error, err is NOT a json-rpc error
+      // if (err instanceof Error) return next(err);
+      // // <- deal with json-rpc errors here, typically caused by the user
+      // res.status(400);
+      // res.send(err);
+      // return;
+    }
+    // <- here we can mutate the response, set response headers, etc
+    if (response) {
+      res.send(response);
+    } else {
+      // empty response (could be a notification)
+      res.status(204);
+      res.send("");
+    }
+  });
+});
+
+let miningOutput = [];
+io.on("connection", (socket) => {
+  socket.on("subscribeToMiningEvents", (interval) => {
+    setInterval(() => {
+      socket.emit(
+        "getMiningEvent",
+        miningOutput.slice(-10).sort((a, b) => b.blockNumber - a.blockNumber)
+      );
+    }, interval);
+  });
+  socket.on("miningEvent", (miningEvent) => {
+    miningOutput.push(miningEvent);
+  });
+  console.log("a user connected");
 });
 
 httpServer.listen(3042);

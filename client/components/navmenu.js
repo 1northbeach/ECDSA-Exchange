@@ -5,7 +5,7 @@ function ActiveLink(href, text) {
   const router = useRouter();
   return (
     <Link href={href}>
-      <a className={`nav-link ${router.asPath === href ? "active" : ""}`}>
+      <a className={`nav-link ${router.asPath === href ? " active" : ""}`}>
         {text}
       </a>
     </Link>
