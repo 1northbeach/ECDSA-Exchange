@@ -27,7 +27,7 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 2. note the private key of one wallet from the server log or front end
 3. grab the address either from the server log or the front end
 4. go to /send and enter the appropriate inputs to start a transaction
-5. go to /mine, enter your wallet and press the mine button until your miner successfully mines a block and receive some ETH in return. if you navigate to page, will display mining logs for all workers. enter your wallet address and filters logs to your miners successful mining output.
+5. go to /mine, enter your wallet and press the mine button until your miner successfully mines a block and receive some ETH in return. if you navigate to page, will display mining logs for all workers. enter your wallet address and filters logs to your miner's successful mining output. you can start and stop your miner upon entering wallet address.
 
 ### todo
 
@@ -38,3 +38,5 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 5. transaction history
 6. receive page
 7. testing would be nice and have helped a lot
+8. move mining to client. server doing all the work currently.
+9. anyone with your wallet can stop you from mining, maybe use private key to toggle mining.
