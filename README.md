@@ -1,4 +1,4 @@
-Submission for Week 2 Project in Chainshot Ethereum Developer Bootcamp by 1northbeach - Juan
+Submission for Week 3 Project in Chainshot Ethereum Developer Bootcamp by 1northbeach - Juan
 
 #
 
@@ -28,6 +28,8 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 3. grab the address either from the server log or the front end
 4. go to /send and enter the appropriate inputs to start a transaction
 5. go to /mine, enter your wallet and press the mine button until your miner successfully mines a block and receive some ETH in return. if you navigate to page, will display mining logs for all workers. enter your wallet address and filters logs to your miner's successful mining output. you can start and stop your miner upon entering wallet address.
+6. go to /explorer and see last 10 transactions and other relevant data on eth mainnet
+7. go to /address/:walletAddress to see some related metadata
 
 ### todo
 

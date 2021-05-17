@@ -16,7 +16,7 @@ export default function Layout({ children }) {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <div className="d-flex w-100 h-100 p-3 mx-auto flex-column">
         <NavMenu />
         <main role="main" className="inner cover">
           {children}

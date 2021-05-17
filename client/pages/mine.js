@@ -105,10 +105,8 @@ export default function Mine() {
       <Head>
         <title>1Ethereum - Mine</title>
       </Head>
-      <div className="container">
+      <div className="container-fluid">
         <h1>Mine</h1>
-
-        {/* <p className="lead">Current Difficulty: {currentDifficulty}</p> */}
         <p className="lead">Wallet Balance: {walletBalance || 0} ETH</p>
         <div className="input-group mb-3">
           <div className="input-group-prepend">
