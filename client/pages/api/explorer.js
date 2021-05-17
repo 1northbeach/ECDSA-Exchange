@@ -1,9 +1,8 @@
-import { providers } from "ethers";
+import provider from "../../lib/provider";
 
 export default async function handler(req, res) {
   console.log("GET /api/explorer");
 
-  var provider = new providers.InfuraProvider();
   const latestBlock = await provider.getBlockNumber();
   console.log(latestBlock);
   let last10Blocks = [];

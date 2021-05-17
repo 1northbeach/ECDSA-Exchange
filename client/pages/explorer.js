@@ -1,7 +1,7 @@
 import Layout from "../components/layout";
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
-import Link from "next/Link";
+import Link from "next/link";
 import Head from "next/head";
 export default function Explorer() {
   const [blockData, setBlockData] = useState(null);
@@ -23,11 +23,17 @@ export default function Explorer() {
         const block = blockData[index];
         blockDataArr.push(
           <tr key={block.number}>
-            <td>{block.number}</td>
+            <td scope="col">
+              <Link href={`/block/${block.number}`}>
+                <a>{block.number}</a>
+              </Link>
+            </td>
             <td>{timeConverter(block.timestamp)}</td>
             <td>{block.transactions.length}</td>
             <td>
-              <Link href={`/address/${block.miner}`}>{block.miner}</Link>
+              <Link href={`/address/${block.miner}`}>
+                <a>{block.miner}</a>
+              </Link>
             </td>
             <td>{parseInt(utils.formatUnits(block.gasUsed, "wei"))}</td>
             <td>{parseInt(utils.formatUnits(block.gasLimit, "wei"))}</td>
@@ -70,7 +76,13 @@ export default function Explorer() {
               </th>
             </tr>
           </thead>
-          <tbody>{blockData || <td colSpan="6">Loading</td>}</tbody>
+          <tbody>
+            {blockData || (
+              <tr>
+                <td colSpan="6">Loading</td>
+              </tr>
+            )}
+          </tbody>
         </table>
       </div>
     </Layout>
