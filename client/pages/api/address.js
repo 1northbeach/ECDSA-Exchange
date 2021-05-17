@@ -1,7 +1,7 @@
 import provider from "../../lib/provider";
 
 export default async function handler(req, res) {
-  console.log("GET /api/address");
+  console.log("POST /api/address");
   console.log(req.body);
 
   const { address } = req.body;

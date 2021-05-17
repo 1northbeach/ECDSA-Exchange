@@ -19,7 +19,7 @@ $ npm run dev
 
 ### summary
 
-Proof of work connected to a next.js frontend with a backend powered by express, jayson and socket.io.
+Proof of work connected to a next.js frontend with a backend powered by express, ethers, jayson and socket.io.
 
 ### basic workflow
 
@@ -29,7 +29,7 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 4. go to /send and enter the appropriate inputs to start a transaction
 5. go to /mine, enter your wallet and press the mine button until your miner successfully mines a block and receive some ETH in return. if you navigate to page, will display mining logs for all workers. enter your wallet address and filters logs to your miner's successful mining output. you can start and stop your miner upon entering wallet address.
 6. go to /explorer and see last 10 transactions and other relevant data on eth mainnet
-7. go to /address/:walletAddress to see some related metadata
+7. block numbers and addresses link to pages where some metadata is displayed fetched via the default InfuraProvider by ethers
 
 ### todo
 
@@ -44,3 +44,5 @@ Proof of work connected to a next.js frontend with a backend powered by express,
 9. anyone with your wallet can stop you from mining, maybe use private key to toggle mining.
 10. balance is calculated by integer value associated with it. use UTXOs to calculate.
 11. currently mines blocks sequentially but not tested for double spends/mining.
+12. code is very wet, needs to be DRY'd
+13. can only get an address balance or block data from a link, can't GET /address/:address or GET /block/:block
